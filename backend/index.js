@@ -22,7 +22,7 @@ import {
   removeFromCart,
   updateCart,
 } from "./controllers/cart.js";
-import Env from './utils/Env.js'
+import Env from "./utils/Env.js";
 
 const app = express();
 
@@ -94,5 +94,7 @@ app.put("/cart", authMiddleware, roleMiddleWare, updateCart);
 app.delete("/cart", authMiddleware, roleMiddleWare, removeFromCart);
 
 app.listen(Env.PORT, () => {
-  console.log(`server is running on http://localhost:${Env.PORT}`);
+  console.log(
+    `server is running on port ${Env.PORT} \nview docs at http://localhost:${Env.PORT}/docs`
+  );
 });
