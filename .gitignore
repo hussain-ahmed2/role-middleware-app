@@ -1,0 +1,21 @@
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.*.local
+
+# Builds and test output
+dist/
+build/
+coverage/
+
+# Docker
+*.tar
+*.log
+
+# OS and IDE
+.DS_Store
+.vscode/
+.idea/
