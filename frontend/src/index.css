@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: "Outfit", sans-serif;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-neutral-700 text-neutral-200;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply hover:underline font-medium;
+  }
+
+  .page {
+    @apply min-h-[calc(100vh-5rem)] flex flex-col py-20 px-5 max-w-7xl mx-auto;
+  }
+
+  .btn {
+    @apply bg-neutral-600 px-6 py-3 rounded-md hover:bg-neutral-500 active:bg-neutral-400 transition duration-300 ease-in-out;
+
+    &:disabled {
+      @apply bg-neutral-600 opacity-50 cursor-not-allowed hover:bg-neutral-600;
+    }
+  }
+
+  .btn-submit {
+    @apply bg-cyan-700 px-6 py-3 rounded-md hover:bg-cyan-600 active:bg-cyan-400 transition duration-300 ease-in-out;
+
+    &:disabled {
+      @apply bg-cyan-700 opacity-50 cursor-not-allowed hover:bg-cyan-700;
+    }
+  }
+
+  .btn-danger {
+    @apply bg-rose-700 px-6 py-3 rounded-md hover:bg-rose-600 active:bg-rose-400 transition duration-300 ease-in-out;
+
+    &:disabled {
+      @apply bg-rose-700 opacity-50 cursor-not-allowed hover:bg-rose-700;
+    }
+  }
+
+  .btn-cancel {
+    @apply bg-amber-600 px-6 py-3 rounded-md hover:bg-amber-500 active:bg-amber-400 transition duration-300 ease-in-out;
+
+    &:disabled {
+      @apply bg-amber-600 opacity-50 cursor-not-allowed hover:bg-amber-600;
+    }
+  }
+
+  .form {
+    @apply flex flex-col gap-3;
+  }
+
+  .input {
+    @apply border border-neutral-700 p-3 rounded-md bg-neutral-800 outline-none ring-neutral-500/50 focus:ring-3 transition duration-300 ease-in-out;
+  }
+
+  .avatar {
+    @apply w-32 h-32 rounded-full object-cover;
+  }
+}
