@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Step 8: start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
