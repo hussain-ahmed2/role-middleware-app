@@ -4,7 +4,7 @@ services:
   app:
     build: .
     ports:
-      - 5000:${PORT}
+      - ${PORT}:${PORT}
     environment:
       - PORT=${PORT}
       - JWT_SECRET=${JWT_SECRET}
