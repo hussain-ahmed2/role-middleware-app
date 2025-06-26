@@ -2,10 +2,14 @@ import express from "express";
 import "dotenv/config";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { roleMiddleWare } from "./middlewares/roleMiddleware.js";
 import cors from "cors";
 import { loginUser, registerUser } from "./controllers/session.js";
-import { getUser } from "./controllers/user.js";
+import {
+  getUser,
+  setAvatar,
+  updateCredentials,
+  updatePassword,
+} from "./controllers/user.js";
 import { getAdmin } from "./controllers/admin.js";
 import connectDB from "./config/connectDB.js";
 import {
@@ -15,7 +19,9 @@ import {
   getProducts,
   updateProduct,
 } from "./controllers/product.js";
+import { roleMiddleWare } from "./middlewares/roleMiddleware.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
+import upload from "./middlewares/upload.js";
 import {
   addToCart,
   getCart,
@@ -23,6 +29,7 @@ import {
   updateCart,
 } from "./controllers/cart.js";
 import Env from "./utils/Env.js";
+import { getAvatars } from "./controllers/avatar.js";
 
 const app = express();
 
@@ -53,9 +60,13 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({ credentials: true }));
+app.use("/uploads", express.static("uploads"));
+app.use("/avatars", express.static("public/avatars"));
 
 // login user
 app.post("/login", loginUser);
+
+app.get("/avatars", getAvatars);
 
 // create user
 app.post("/register", registerUser);
@@ -65,6 +76,26 @@ app.get("/admin", authMiddleware, roleMiddleWare, getAdmin);
 
 // get user
 app.get("/profile", authMiddleware, roleMiddleWare, getUser);
+
+// update credentials
+app.put(
+  "/profile/credentials",
+  authMiddleware,
+  roleMiddleWare,
+  updateCredentials
+);
+
+// set avatar
+app.put(
+  "/profile/avatar",
+  authMiddleware,
+  roleMiddleWare,
+  upload.single("avatar"),
+  setAvatar
+);
+
+// change password
+app.put("/profile/password", authMiddleware, roleMiddleWare, updatePassword);
 
 // get products
 app.get("/products", roleMiddleWare, getProducts);

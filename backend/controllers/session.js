@@ -57,10 +57,14 @@ import { loginSchema, registerSchema } from "../validation/zod-schemas.js";
  *                       type: string
  *                       description: Email address of the user.
  *                       example: john@example.com
- *                     message:
+ *                     avatar:
  *                       type: string
- *                       description: Success message
- *                       example: Successfully logged in
+ *                       description: URL of the user's avatar image.
+ *                       example: https://example.com/avatar.jpg
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *                   example: Successfully logged in
  *       400:
  *         description: Validation error
  *         content:
@@ -145,7 +149,7 @@ export const loginUser = async (req, res) => {
       });
 
     // Find the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: data.email });
 
     // Check if the user exists
     if (!user)
@@ -173,7 +177,12 @@ export const loginUser = async (req, res) => {
       success: true,
       token,
       message: "Successfully logged in",
-      user: { name: user.name, role: user.role, email: user.email },
+      user: {
+        name: user.name,
+        role: user.role,
+        email: user.email,
+        avatar: user.avatar,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -240,6 +249,10 @@ export const loginUser = async (req, res) => {
  *                       type: string
  *                       description: Email address of the user.
  *                       example: john@example.com
+ *                     avatar:
+ *                       type: string
+ *                       description: URL of the user's avatar image.
+ *                       example: https://example.com/avatar.jpg
  *                 message:
  *                   type: string
  *                   description: Success message
@@ -295,7 +308,7 @@ export const loginUser = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     // Destructure the request body
-    const { name, password, email } = req.body;
+    const { name, password, email, defaultAvatar } = req.body;
 
     // validate the request body with zod schema
     const { success, data, error } = registerSchema.safeParse(req.body);
@@ -310,7 +323,7 @@ export const registerUser = async (req, res) => {
     const users = await User.find({});
 
     // Find the user by email
-    const userExists = users.find((item) => item.email === email);
+    const userExists = users.find((item) => item.email === data.email);
 
     // Check if the user already exists
     if (userExists)
@@ -328,6 +341,7 @@ export const registerUser = async (req, res) => {
       name,
       password: hashedPassword,
       email,
+      defaultAvatar,
     });
 
     // Generate a JWT
@@ -337,7 +351,7 @@ export const registerUser = async (req, res) => {
     res.send({
       success: true,
       token,
-      user: { name, email, role: user.role },
+      user: { name, email, role: user.role, avatar: user.avatar },
       message: "Successfully registered",
     });
   } catch (error) {
