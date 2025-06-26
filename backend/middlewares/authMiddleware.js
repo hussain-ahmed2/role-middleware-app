@@ -16,7 +16,7 @@ export async function authMiddleware(req, res, next) {
     if (!id) return res.status(401).json({ message: "Invalid token" });
 
     // Find the user by ID
-    const user = await User.findById(id).select("-password");
+    const user = await User.findById(id);
 
     // Check if the user exists
     if (!user) return res.status(404).json({ message: "User not found" });
