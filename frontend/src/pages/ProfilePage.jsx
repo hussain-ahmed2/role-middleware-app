@@ -1,7 +1,5 @@
-import Avatar from "../components/user/Avatar";
-import ChangePassword from "../components/user/ChangePassword";
-import Credentials from "../components/user/Credentials";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 function ProfilePage() {
   const { user, loading } = useAuth();
@@ -17,18 +15,21 @@ function ProfilePage() {
           <span className="font-semibold text-cyan-600">{user.name}</span>
         </p>
 
-        <div className="my-10">
+        <div className="my-10 space-y-3">
+          <h3>Credentials</h3>
           <div>
-            <Avatar />
+            <img
+              className="size-32 border-4 rounded-full shadow-md"
+              src={`${import.meta.env.VITE_API_URL}/${user.avatar}`}
+              alt={`avatar of ${user.name}`}
+            />
           </div>
-          <hr className="my-5 text-neutral-600" />
-          <div>
-            <Credentials />
-          </div>
-          <hr className="my-5 text-neutral-600" />
-          <div>
-            <ChangePassword />
-          </div>
+          <p>Email: {user.email}</p>
+          <p>Name: {user.name}</p>
+
+          <Link to="/profile/edit" className="btn block w-fit">
+            Edit Credentials
+          </Link>
         </div>
       </div>
     </section>
