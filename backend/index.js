@@ -4,12 +4,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import { loginUser, registerUser } from "./controllers/session.js";
-import {
-  getUser,
-  setAvatar,
-  updateCredentials,
-  updatePassword,
-} from "./controllers/user.js";
+import { getUser, updateCredentials } from "./controllers/user.js";
 import { getAdmin } from "./controllers/admin.js";
 import connectDB from "./config/connectDB.js";
 import {
@@ -59,7 +54,7 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use("/uploads", express.static("uploads"));
 app.use("/avatars", express.static("public/avatars"));
 
@@ -69,7 +64,7 @@ app.post("/login", loginUser);
 app.get("/avatars", getAvatars);
 
 // create user
-app.post("/register", registerUser);
+app.post("/register", upload.single("avatar"), registerUser);
 
 // get admin
 app.get("/admin", authMiddleware, roleMiddleWare, getAdmin);
@@ -79,23 +74,12 @@ app.get("/profile", authMiddleware, roleMiddleWare, getUser);
 
 // update credentials
 app.put(
-  "/profile/credentials",
-  authMiddleware,
-  roleMiddleWare,
-  updateCredentials
-);
-
-// set avatar
-app.put(
-  "/profile/avatar",
+  "/profile",
   authMiddleware,
   roleMiddleWare,
   upload.single("avatar"),
-  setAvatar
+  updateCredentials
 );
-
-// change password
-app.put("/profile/password", authMiddleware, roleMiddleWare, updatePassword);
 
 // get products
 app.get("/products", roleMiddleWare, getProducts);
