@@ -14,6 +14,7 @@ function RegisterPage() {
   const methods = useForm({ resolver: zodResolver(registerSchema) });
 
   async function onSubmit(data) {
+    console.log(data);
     const res = await register(data);
     if (res.success) {
       navigate("/profile");
@@ -34,6 +35,7 @@ function RegisterPage() {
           <form
             className="form mt-10"
             onSubmit={methods.handleSubmit(onSubmit)}
+            encType="multipart/form-data"
           >
             <PickAvatar />
 
