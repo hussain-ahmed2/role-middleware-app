@@ -10,7 +10,16 @@ export const loginSchema = z.object({
 
 export const registerSchema = z
   .object({
-    defaultAvatar: z.string("Default avatar is required").trim(),
+    avatar: z
+      .any()
+      .optional()
+      .refine(
+        (value) =>
+          value === undefined ||
+          value instanceof File ||
+          typeof value === "string",
+        "Avatar must be a file or existing avatar path"
+      ),
     name: z
       .string("Name is required")
       .trim()
@@ -20,42 +29,50 @@ export const registerSchema = z
       .string("Password is required")
       .trim()
       .min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string("Confirm password is required").trim(),
+    confirmPassword: z
+      .string("Password is required")
+      .trim()
+      .min(8, "Password must be at least 8 characters long"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });
 
-export const avatarSchema = z.object({
-  avatar: z
-    .instanceof(File, { message: "Avatar is required" })
-    .refine((file) => file && file.size < 2 * 1024 * 1024, {
-      message: "Max file size is 2MB",
-    })
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-      {
-        message: "Only JPG, PNG, or WEBP images allowed",
+export const credentialsSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .nonempty("Name is required")
+      .min(3, "Name must be at least 3 characters long"),
+    email: z
+      .string()
+      .trim()
+      .nonempty("Email is required")
+      .email("Invalid email format"),
+    currentPassword: z.string().trim().optional(),
+    newPassword: z.string().trim().optional(),
+    avatar: z
+      .any()
+      .optional()
+      .refine(
+        (value) =>
+          value === undefined ||
+          value instanceof File ||
+          typeof value === "string",
+        "Avatar must be a file or existing avatar path"
+      ),
+  })
+  .refine(
+    (data) => {
+      if (data.newPassword && !data.currentPassword) {
+        return false;
       }
-    ),
-});
-
-export const credentialsSchema = z.object({
-  name: z
-    .string("Name is required")
-    .trim()
-    .min(3, "Name must be at least 3 characters long"),
-  email: z.string("Email is required").email("Invalid email format").trim(),
-});
-
-export const changePasswordSchema = z.object({
-  oldPassword: z
-    .string("Password is required")
-    .trim()
-    .min(8, "Password must be at least 8 characters long"),
-  newPassword: z
-    .string("Password is required")
-    .trim()
-    .min(8, "Password must be at least 8 characters long"),
-});
+      return true;
+    },
+    {
+      message: "Current password is required when setting a new password",
+      path: ["currentPassword"],
+    }
+  );
