@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import fs from "fs";
 import path from "path";
-import { credentialsSchema } from "../../frontend/src/validation/zod-schemas.js";
+import { credentialsSchema } from "../validation/zod-schemas.js";
 import { passwordSchema } from "../validation/zod-schemas.js";
 import { checkPassword, hashPassword } from "../utils/utils.js";
 
