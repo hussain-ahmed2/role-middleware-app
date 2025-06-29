@@ -3,7 +3,7 @@ import SiteLogo from "./SiteLogo";
 import { useAuth } from "../hooks/useAuth";
 
 function Navbar() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, cart } = useAuth();
 
   return (
     <nav className="flex justify-between items-center min-h-20 px-5 max-w-7xl mx-auto">
@@ -32,7 +32,7 @@ function Navbar() {
             Products
           </NavLink>
         </li>
-        <li>
+        <li className="relative">
           <NavLink
             className={({ isActive }) =>
               `nav-link ${isActive ? "text-cyan-500" : ""}`
@@ -41,6 +41,11 @@ function Navbar() {
           >
             Cart
           </NavLink>
+          {cart.length > 0 && (
+            <div className="absolute -top-4 -right-4 bg-neutral-600 text-white rounded-full px-2 text-sm aspect-square flex items-center justify-center">
+              {cart.length}
+            </div>
+          )}
         </li>
       </ul>
 
