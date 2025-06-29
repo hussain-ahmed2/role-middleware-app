@@ -8,6 +8,7 @@ function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [token, setToken] = useLocalStorage("token", "");
+  const [cart, setCart] = useState([]);
 
   const login = async ({ email, password }) => {
     try {
@@ -28,14 +29,22 @@ function AuthProvider({ children }) {
     toast.success("Successfully logged out");
   };
 
-  const register = async ({ name, email, password, defaultAvatar }) => {
+  const register = async ({ name, email, password, avatar }) => {
     try {
-      const res = await api.post("/register", {
-        name,
-        email,
-        password,
-        defaultAvatar,
-      });
+      const res = await api.post(
+        "/register",
+        {
+          name,
+          email,
+          password,
+          avatar,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setUser(res.data.user);
       setToken(res.data.token);
       return res.data;
@@ -45,13 +54,10 @@ function AuthProvider({ children }) {
     }
   };
 
-  const setAvatar = async (avatar) => {
+  async function updateProfile(credentials) {
     try {
-      const formData = new FormData();
-      formData.append("avatar", avatar);
-      const res = await api.put("/profile/avatar", formData, {
+      const res = await api.put("/profile", credentials, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -61,39 +67,43 @@ function AuthProvider({ children }) {
       console.log(error);
       return error.response.data;
     }
-  };
+  }
 
-  const updateCredentials = async (credentials) => {
+  async function deleteFromCart(productId) {
     try {
-      const res = await api.put("/profile/credentials", credentials, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.data.success) {
-        setUser(res.data.user);
-      }
+      const res = await api.delete("/cart", { data: { productId } });
+      setCart(res.data.cart);
+      toast.success(res.data.message);
       return res.data;
     } catch (error) {
       console.log(error);
       return error.response.data;
     }
-  };
+  }
 
-  const updatePassword = async (credentials) => {
+  async function addToCart(productId) {
     try {
-      const res = await api.put("/profile/password", credentials, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.post("/cart", { productId });
+      setCart(res.data.cart);
+      toast.success(res.data.message);
       return res.data;
     } catch (error) {
       console.log(error);
       return error.response.data;
     }
-  };
+  }
+
+  async function updateCart(productId, quantity) {
+    try {
+      const res = await api.put("/cart", { productId, quantity });
+      setCart(res.data.cart);
+      toast.success(res.data.message);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return error.response.data;
+    }
+  }
 
   useEffect(() => {
     async function getUser() {
@@ -102,6 +112,7 @@ function AuthProvider({ children }) {
           api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           const res = await api.get("/profile");
           setUser(res.data.user);
+          setCart(res.data.cart);
         } catch (error) {
           console.log(error);
         } finally {
@@ -123,9 +134,11 @@ function AuthProvider({ children }) {
         logout,
         loading,
         register,
-        setAvatar,
-        updateCredentials,
-        updatePassword,
+        updateProfile,
+        cart,
+        deleteFromCart,
+        addToCart,
+        updateCart,
       }}
     >
       {children}
