@@ -12,6 +12,7 @@ import AdminPage from "./pages/AdminPage";
 import AuthProvider from "./contexts/AuthProvider";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
+import EditProfilePage from "./pages/EditProfilePage";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -84,6 +85,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/profile/edit"
+              element={
+                <ProtectedRoute>
+                  <EditProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/admin"
               element={
