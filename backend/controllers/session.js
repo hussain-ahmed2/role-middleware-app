@@ -308,7 +308,8 @@ export const loginUser = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     // Destructure the request body
-    const { name, password, email, defaultAvatar } = req.body;
+    const { name, password, email } = req.body;
+    const avatar = req.file ? req.file.path : null;
 
     // validate the request body with zod schema
     const { success, data, error } = registerSchema.safeParse(req.body);
@@ -316,7 +317,19 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Validation error",
-        errors: error.flatten().fieldErrors,
+        errors: {
+          ...error.formErrors.fieldErrors,
+          avatar: "Avatar is required",
+        },
+      });
+
+    if (!avatar)
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: {
+          avatar: "Avatar is required",
+        },
       });
 
     // Find all users
@@ -341,7 +354,7 @@ export const registerUser = async (req, res) => {
       name,
       password: hashedPassword,
       email,
-      defaultAvatar,
+      avatar,
     });
 
     // Generate a JWT
