@@ -1,10 +1,10 @@
 import User from "../models/User.js";
-import { decodeToken, getTokenFromHeader } from "../utils/utils.js";
+import { decodeToken } from "../utils/utils.js";
 
 export async function authMiddleware(req, res, next) {
   try {
-    // Get the token from the request header
-    const token = getTokenFromHeader(req);
+    // Get the token from the cookie
+    const token = req.cookies.token || "";
 
     // Check if the token is present
     if (!token) return res.status(401).json({ message: "Token missing" });
