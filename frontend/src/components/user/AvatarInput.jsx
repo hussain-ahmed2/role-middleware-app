@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
+import { Image } from "lucide-react";
 
 function AvatarInput() {
   const {
@@ -27,12 +28,17 @@ function AvatarInput() {
     <div>
       <label htmlFor="avatar" className="w-full cursor-pointer">
         <span>Avatar (optional)</span>
-        <img
-          className="size-32 border-4 rounded-full shadow-md mx-auto"
-          src={previewUrl || `${import.meta.env.VITE_API_URL}/${user.avatar}`}
-          alt="Avatar Preview"
-        />
-        <p className="text-center mt-2">Upload an image</p>
+        <div className="relative group mx-auto w-fit">
+          <img
+            className="size-32 border-4 rounded-full shadow-md group-hover:opacity-50 transition duration-300 ease-in-out"
+            src={previewUrl || `${import.meta.env.VITE_API_URL}/${user.avatar}`}
+            alt="Avatar Preview"
+          />
+          <p className="text-center mt-2">Upload an image</p>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out">
+            <Image size={32} />
+          </div>
+        </div>
       </label>
       <input
         id="avatar"
