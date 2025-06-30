@@ -20,6 +20,7 @@ function CartItem({ item }) {
         <IncrementAndDecrementQuantityButtons
           id={item.product._id}
           quantity={quantity}
+          itemQuantity={item.quantity}
           setQuantity={setQuantity}
         />
         <button
