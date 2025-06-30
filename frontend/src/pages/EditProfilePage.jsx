@@ -5,14 +5,13 @@ import { credentialsSchema } from "../validation/zod-schemas";
 import InputField from "../components/form/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import AvatarInput from "../components/user/AvatarInput";
-import { toast } from "react-toastify";
 import { handleErrors } from "../validation/handleErrors";
 
 function EditProfilePage() {
   const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
   const methods = useForm({
-    defaultValues: { ...user },
+    defaultValues: { name: user.name, email: user.email },
     resolver: zodResolver(credentialsSchema),
   });
 
@@ -20,8 +19,7 @@ function EditProfilePage() {
     const res = await updateProfile(data);
 
     if (res.success) {
-      toast.success(res.message);
-      methods.reset(res.user);
+      methods.reset({ name: user.name, email: user.email });
       navigate("/profile");
     } else handleErrors(res.errors, methods.setError);
   };
