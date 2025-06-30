@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import { productSchema } from "../validation/zod-schemas.js";
 
 /**
  * @swagger
@@ -60,7 +61,7 @@ export async function getProducts(req, res) {
     // Find all products
     const products = await Product.find({});
 
-    res.status(200).json({ success: true, products});
+    res.status(200).json({ success: true, products });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -147,11 +148,13 @@ export async function getProduct(req, res) {
 
     // Check if the product exists
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     // Return the product
-    res.status(200).json({ success: true, product});
+    res.status(200).json({ success: true, product });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -279,23 +282,38 @@ export async function createProduct(req, res) {
     // Destructure the name, description, and price from the request body
     const { name, description, price } = req.body;
 
-    // Check if any of the required fields are missing
-    if (!name?.trim() || !description?.trim() || !price) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+    const { success, error, data } = productSchema.safeParse({
+      name,
+      description,
+      price,
+    });
+
+    if (!success) {
+      return res.status(400).json({
+        success: false,
+        errors: error.formErrors.fieldErrors,
+        message: "Validation error",
+      });
     }
 
     // Check if a product with the same name already exists
-    const existingProduct = await Product.findOne({ name });
+    const existingProduct = await Product.findOne({ name: data.name });
 
     // If a product with the same name already exists, return an error
     if (existingProduct) {
-      return res.status(400).json({ success: false, message: "Product already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Product already exists" });
     }
 
     // Create a new product
-    const product = await Product.create({ name, description, price });
+    const product = await Product.create(data);
 
-    res.status(201).json({ success: true, product, message: "Product created successfully" });
+    res.status(201).json({
+      success: true,
+      product,
+      message: "Product created successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -431,23 +449,39 @@ export async function updateProduct(req, res) {
     const { id } = req.params;
     const { name, description, price } = req.body;
 
-    if (!name?.trim() || !description?.trim() || !price) {
-      return res.status(400).json({ success: false, message: "All fields are required" });
+    const { data, success, error } = productSchema.safeParse({
+      name,
+      description,
+      price,
+    });
+
+    if (!success) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        error: error.formErrors.fieldErrors,
+      });
     }
 
     const product = await Product.findById(id);
 
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
-    product.name = name;
-    product.description = description;
-    product.price = price;
+    product.name = data.name;
+    product.description = data.description;
+    product.price = data.price;
 
     await product.save();
 
-    res.status(200).json({ success: true, product, message: "Product updated successfully" });
+    res.status(200).json({
+      success: true,
+      product,
+      message: "Product updated successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Server error" });
@@ -534,12 +568,16 @@ export async function deleteProduct(req, res) {
     const product = await Product.findById(id);
 
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     await Product.findByIdAndDelete(id);
 
-    res.status(200).json({ success: true, message: "Product deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Server error" });
