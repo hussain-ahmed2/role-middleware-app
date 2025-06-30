@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { loginUser, logoutUser, registerUser } from "./controllers/session.js";
-import { getUser, updateCredentials } from "./controllers/user.js";
+import { getUser, getUsers, updateCredentials } from "./controllers/user.js";
 import { getAdmin } from "./controllers/admin.js";
 import connectDB from "./config/connectDB.js";
 import {
@@ -73,6 +73,9 @@ app.post("/register", upload.single("avatar"), registerUser);
 
 // get admin
 app.get("/admin", authMiddleware, roleMiddleWare, getAdmin);
+
+// get users
+app.get("/users", authMiddleware, roleMiddleWare, getUsers);
 
 // get user
 app.get("/profile", authMiddleware, roleMiddleWare, getUser);
