@@ -21,7 +21,7 @@ function IncrementAndDecrementQuantityButtons({
     <div className="flex gap-2 items-center">
       <button
         disabled={quantity <= 1}
-        className="p-2 rounded-lg bg-neutral-800 hover:bg-rose-600 transition duration-300 ease-in-out disabled:opacity-50 disabled:bg-neutral-800 size-10"
+        className="p-2 rounded-lg bg-neutral-800 hover:bg-rose-600 transition duration-300 ease-in-out disabled:opacity-50 disabled:bg-neutral-800 size-10 disabled:cursor-not-allowed"
         onClick={() => setQuantity((prev) => prev - 1)}
       >
         <Minus />
