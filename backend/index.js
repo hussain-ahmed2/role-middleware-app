@@ -3,7 +3,8 @@ import "dotenv/config";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
-import { loginUser, registerUser } from "./controllers/session.js";
+import cookieParser from "cookie-parser";
+import { loginUser, logoutUser, registerUser } from "./controllers/session.js";
 import { getUser, updateCredentials } from "./controllers/user.js";
 import { getAdmin } from "./controllers/admin.js";
 import connectDB from "./config/connectDB.js";
@@ -54,13 +55,17 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use("/uploads", express.static("uploads"));
 app.use("/avatars", express.static("public/avatars"));
 
 // login user
 app.post("/login", loginUser);
+// logout user
+app.post("/logout", authMiddleware, logoutUser);
 
+// get avatars
 app.get("/avatars", getAvatars);
 
 // create user
