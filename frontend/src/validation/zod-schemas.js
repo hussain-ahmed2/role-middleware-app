@@ -66,13 +66,23 @@ export const credentialsSchema = z
   })
   .refine(
     (data) => {
-      if (data.newPassword && !data.currentPassword) {
-        return false;
+      if (data.currentPassword || data.newPassword) {
+        return data.currentPassword && data.newPassword;
       }
       return true;
     },
     {
-      message: "Current password is required when setting a new password",
-      path: ["currentPassword"],
+      message: "Both current and new password must be provided",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) =>
+      !data.currentPassword ||
+      !data.newPassword ||
+      data.currentPassword !== data.newPassword,
+    {
+      message: "New password must be different from the current password",
+      path: ["newPassword"],
     }
   );
