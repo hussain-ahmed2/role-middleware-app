@@ -58,7 +58,7 @@ function Navbar() {
               <NavLink
                 to="/profile"
                 className={({ isActive }) =>
-                  `nav-link flex items-center gap-1 border-2 rounded-full transition duration-300 ease-in-out ${
+                  `nav-link flex items-center gap-1 border-2 rounded-full ${
                     isActive
                       ? "border-cyan-500"
                       : "border-transparent hover:border-neutral-500"
