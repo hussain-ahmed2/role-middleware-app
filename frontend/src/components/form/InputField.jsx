@@ -8,6 +8,7 @@ function InputField({
   type = "text",
   placeholder = "Type here",
   defaultValue = null,
+  ...props
 }) {
   const {
     register,
@@ -35,6 +36,7 @@ function InputField({
         placeholder={placeholder}
         defaultValue={defaultValue}
         {...register(name)}
+        {...props}
       />
       <div className="overflow-hidden">
         <p
