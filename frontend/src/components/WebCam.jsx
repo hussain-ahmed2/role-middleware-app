@@ -4,8 +4,8 @@ import { useFormContext } from "react-hook-form";
 import Webcam from "react-webcam";
 
 const videoConstraints = {
-  width: 1280,
-  height: 720,
+  width: 600,
+  height: 600,
   facingMode: "user",
 };
 
@@ -31,7 +31,7 @@ function WebCam({ setSelectedAvatar }) {
     >
       <div className="flex flex-wrap items-center">
         {editing ? (
-          <div>
+          <div className="w-full aspect-[3/3.5]">
             <Webcam
               audio={false}
               screenshotFormat="image/jpeg"
