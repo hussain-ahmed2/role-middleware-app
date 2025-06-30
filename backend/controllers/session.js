@@ -173,7 +173,13 @@ export const loginUser = async (req, res) => {
     // Generate a JWT
     const token = generateToken({ id: user._id });
 
-    res.send({
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
       success: true,
       token,
       message: "Successfully logged in",
@@ -360,13 +366,29 @@ export const registerUser = async (req, res) => {
     // Generate a JWT
     const token = generateToken({ id: user._id });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     // Send the response
-    res.send({
+    res.json({
       success: true,
       token,
       user: { name, email, role: user.role, avatar: user.avatar },
       message: "Successfully registered",
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.json({ success: true, message: "Successfully logged out" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Server error" });
