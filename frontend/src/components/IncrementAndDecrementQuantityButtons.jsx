@@ -11,8 +11,8 @@ function IncrementAndDecrementQuantityButtons({
   const { updateCart } = useAuth();
 
   useEffect(() => {
-    if (quantity !== itemQuantity) {
-      const timer = setTimeout(() => updateCart(id, quantity), 1000);
+    if (quantity !== itemQuantity && quantity > 0) {
+      const timer = setTimeout(() => updateCart(id, quantity), 400);
       return () => clearTimeout(timer);
     }
   }, [quantity]);
