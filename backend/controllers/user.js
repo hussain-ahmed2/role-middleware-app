@@ -308,3 +308,85 @@ export async function updateCredentials(req, res) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 }
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retrieve all users
+ *     description: >
+ *       Returns all users in the database.
+ *       Only users with the role `admin` can access this endpoint.
+ *     tags:
+ *       - User
+ *     security:
+ *       - Bearer: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: Unique identifier for the user
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         description: Full name of the user
+ *                         example: John Doe
+ *                       email:
+ *                         type: string
+ *                         description: Email address of the user
+ *                         example: john@example.com
+ *                       role:
+ *                         type: string
+ *                         description: Role of the user
+ *                         example: admin
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+
+export async function getUsers(req, res) {
+  try {
+    const users = await User.find({ role: "user" }).select("-password");
+    res.send({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+}
