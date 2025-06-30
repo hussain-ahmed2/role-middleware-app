@@ -68,3 +68,24 @@ export const credentialsSchema = z
       path: ["newPassword"],
     }
   );
+
+export const productSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .nonempty("Name is required")
+    .min(3, "Name must be at least 3 characters long"),
+
+  description: z
+    .string()
+    .trim()
+    .nonempty("Description is required")
+    .min(5, "Description must be at least 5 characters long"),
+
+  price: z.preprocess(
+    (val) => (typeof val === "string" ? parseFloat(val) : val),
+    z
+      .number({ invalid_type_error: "Price must be a number" })
+      .min(0.49, "Price must be at least 0.49")
+  ),
+});
