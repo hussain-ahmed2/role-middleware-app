@@ -1,6 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
 
+@theme {
+  --animate-scale-in-out: scale-in-out 0.5s ease-in-out infinite alternate;
+
+  @keyframes scale-in-out {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
 @layer base {
   html {
     font-family: "Outfit", sans-serif;
@@ -14,11 +27,11 @@
 
 @layer components {
   .nav-link {
-    @apply hover:underline font-medium;
+    @apply hover:underline font-medium transition duration-300 ease-in-out;
   }
 
   .page {
-    @apply min-h-[calc(100vh-5rem)] flex flex-col py-20 px-5 max-w-7xl mx-auto;
+    @apply min-h-[calc(100vh-5rem)] flex flex-col pt-20 pb-5 px-5 max-w-7xl mx-auto;
   }
 
   .btn {
