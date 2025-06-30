@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 function Product({ product }) {
   const { addToCart, cart } = useAuth();
@@ -11,8 +12,13 @@ function Product({ product }) {
       <p className="font-bold">${product.price}</p>
       <div className="flex justify-end mt-3">
         {isInCart ? (
-          <div className="flex gap-2 items-center text-green-600">
-            <Check /> Added to cart
+          <div className="flex items-center gap-3">
+            <p className="text-green-600 flex items-center">
+              <Check /> Added to cart
+            </p>
+            <Link to="/cart" className="btn">
+              Go to cart
+            </Link>
           </div>
         ) : (
           <button onClick={() => addToCart(product._id)} className="btn">
