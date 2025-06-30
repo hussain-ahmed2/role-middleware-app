@@ -1,5 +1,6 @@
 import CartItem from "../components/CartItem";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 function CartPage() {
   const { cart } = useAuth();
@@ -22,6 +23,21 @@ function CartPage() {
               {cart.map((item) => (
                 <CartItem key={item.product._id} item={item} />
               ))}
+              <div className="grid grid-cols-5 p-3 items-center">
+                <div className="col-span-3"></div>
+                <p className="text-lg font-semibold">
+                  Grand Total: $
+                  {cart
+                    .reduce(
+                      (acc, item) => acc + item.product.price * item.quantity,
+                      0
+                    )
+                    .toFixed(2)}
+                </p>
+                <Link to="/checkout" className="btn text-center">
+                  Checkout
+                </Link>
+              </div>
             </div>
           ) : (
             <p className="text-2xl">Cart is empty</p>
