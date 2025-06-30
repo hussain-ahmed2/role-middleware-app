@@ -14,7 +14,7 @@ function CartItem({ item }) {
     >
       <p>{item.product.name}</p>
       <p>${item.product.price}</p>
-      <p>{quantity}</p>
+      <p>x{quantity}</p>
       <p>${(item.product.price * item.quantity).toFixed(2)}</p>
       <div className="flex gap-2 items-center">
         <IncrementAndDecrementQuantityButtons
