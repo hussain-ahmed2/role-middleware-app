@@ -66,6 +66,7 @@ function AuthProvider({ children }) {
         },
       });
       setUser(res.data.user);
+      toast.success(res.data.message);
       return res.data;
     } catch (error) {
       console.log(error);
