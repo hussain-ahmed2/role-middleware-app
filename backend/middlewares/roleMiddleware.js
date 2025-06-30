@@ -1,6 +1,7 @@
 // Define allowed roles for each path
 const ROLE = {
   "/admin": ["admin:get", "admin:post", "admin:put", "admin:delete"],
+  "/users": ["admin:get", "admin:post", "admin:put", "admin:delete"],
   "/profile": [
     "user:get",
     "user:post",
