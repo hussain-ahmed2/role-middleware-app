@@ -35,28 +35,36 @@ export const credentialsSchema = z
       .email("Invalid email format"),
     currentPassword: z.string().trim().optional(),
     newPassword: z.string().trim().optional(),
-    avatar: z.instanceof(File).optional(),
+    avatar: z
+      .any()
+      .optional()
+      .refine(
+        (value) =>
+          value === undefined ||
+          value instanceof File ||
+          typeof value === "string",
+        "Avatar must be a file or existing avatar path"
+      ),
   })
   .refine(
     (data) => {
-      if (data.newPassword && !data.currentPassword) {
-        return false;
+      if (data.currentPassword || data.newPassword) {
+        return data.currentPassword && data.newPassword;
       }
       return true;
     },
     {
-      message: "Current password is required when setting a new password",
-      path: ["currentPassword"],
+      message: "Both current and new password must be provided",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) =>
+      !data.currentPassword ||
+      !data.newPassword ||
+      data.currentPassword !== data.newPassword,
+    {
+      message: "New password must be different from the current password",
+      path: ["newPassword"],
     }
   );
-
-export const passwordSchema = z.object({
-  oldPassword: z
-    .string("Password is required")
-    .trim()
-    .min(8, "Password must be at least 8 characters long"),
-  newPassword: z
-    .string("Password is required")
-    .trim()
-    .min(8, "Password must be at least 8 characters long"),
-});
