@@ -2,12 +2,19 @@ import { Minus, Plus } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 
-function IncrementAndDecrementQuantityButtons({ id, quantity, setQuantity }) {
+function IncrementAndDecrementQuantityButtons({
+  id,
+  quantity,
+  setQuantity,
+  itemQuantity,
+}) {
   const { updateCart } = useAuth();
 
   useEffect(() => {
-    const timer = setTimeout(() => updateCart(id, quantity), 1000);
-    return () => clearTimeout(timer);
+    if (quantity !== itemQuantity) {
+      const timer = setTimeout(() => updateCart(id, quantity), 1000);
+      return () => clearTimeout(timer);
+    }
   }, [quantity]);
 
   return (
