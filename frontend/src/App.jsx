@@ -13,6 +13,10 @@ import AuthProvider from "./contexts/AuthProvider";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import EditProfilePage from "./pages/EditProfilePage";
+import AdminLayout from "./components/AdminLayout";
+import AdminProductsPage from "./pages/AdminProductsPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminProductPage from "./pages/AdminProductPage";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -94,11 +98,24 @@ function App() {
               }
             />
 
+            {/* admin routes */}
             <Route
               path="/admin"
               element={
                 <AdminRoute>
-                  <AdminPage />
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminPage />} />
+              <Route path="users" element={<AdminUsersPage />} />
+              <Route path="products" element={<AdminProductsPage />} />
+            </Route>
+            <Route
+              path="/admin/products/:id"
+              element={
+                <AdminRoute>
+                  <AdminProductPage />
                 </AdminRoute>
               }
             />
