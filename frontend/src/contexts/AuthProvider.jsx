@@ -13,7 +13,7 @@ function AuthProvider({ children }) {
   const login = async ({ email, password }) => {
     try {
       const res = await api.post("/login", { email, password });
-      setToken(res.data.token);
+      setToken("true");
       setUser(res.data.user);
 
       return res.data;
@@ -23,10 +23,14 @@ function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
-    setToken("");
-    setUser(null);
-    toast.success("Successfully logged out");
+  const logout = async () => {
+    const res = await api.post("/logout");
+    if (res.data.success) {
+      setToken("");
+      setUser(null);
+      setCart([]);
+      toast.success("Successfully logged out");
+    }
   };
 
   const register = async ({ name, email, password, avatar }) => {
@@ -46,7 +50,7 @@ function AuthProvider({ children }) {
         }
       );
       setUser(res.data.user);
-      setToken(res.data.token);
+      setToken("true");
       return res.data;
     } catch (error) {
       console.log(error);
@@ -109,7 +113,6 @@ function AuthProvider({ children }) {
     async function getUser() {
       if (token) {
         try {
-          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           const res = await api.get("/profile");
           setUser(res.data.user);
           setCart(res.data.cart);
