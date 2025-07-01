@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema } from "../validation/zod-schemas";
 import { api } from "../api/axios";
 import { toast } from "react-toastify";
+import DeleteProductBtn from "./DeleteProductBtn";
 
 function ProductFrom({ product: { _id: id, name, description, price } }) {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function ProductFrom({ product: { _id: id, name, description, price } }) {
         <InputFiled name="description" label="Description" />
 
         <div className="flex gap-2 justify-end">
+          <DeleteProductBtn />
           <button className="btn" type="button" onClick={() => navigate(-1)}>
             Cancel
           </button>
