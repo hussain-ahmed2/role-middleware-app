@@ -17,6 +17,7 @@ import AdminLayout from "./components/AdminLayout";
 import AdminProductsPage from "./pages/AdminProductsPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminProductPage from "./pages/AdminProductPage";
+import AdminCreateProduct from "./pages/AdminCreateProduct";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -111,6 +112,14 @@ function App() {
               <Route path="users" element={<AdminUsersPage />} />
               <Route path="products" element={<AdminProductsPage />} />
             </Route>
+            <Route
+              path="/admin/products/create"
+              element={
+                <AdminRoute>
+                  <AdminCreateProduct />
+                </AdminRoute>
+              }
+            />
             <Route
               path="/admin/products/:id"
               element={
