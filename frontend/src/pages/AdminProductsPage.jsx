@@ -3,6 +3,7 @@ import { api } from "../api/axios";
 import Skeleton from "../components/Skeleton";
 import { Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { isNewProduct } from "../utils/utils";
 
 function AdminProductsPage() {
   const [products, setProducts] = useState([]);
@@ -24,7 +25,15 @@ function AdminProductsPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold">Products</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Products</h2>
+        <Link
+          to="/admin/products/create"
+          className="btn p-2 text-sm flex gap-1"
+        >
+          Add product <Edit size={16} />
+        </Link>
+      </div>
       <div className="my-10">
         {loading ? (
           <ProductSkeletons />
@@ -43,7 +52,14 @@ function AdminProductsPage() {
                     key={product._id}
                     className="grid grid-cols-3 gap-5 p-3 border-t border-neutral-600"
                   >
-                    <p>{product.name}</p>
+                    <p>
+                      {product.name}
+                      {isNewProduct(product.createdAt) && (
+                        <span className="p-1 rounded bg-cyan-700 text-white ml-2 text-xs">
+                          New
+                        </span>
+                      )}
+                    </p>
                     <p>${product.price}</p>
                     <div className="flex gap-2 items-center">
                       <Link
