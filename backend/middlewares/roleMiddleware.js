@@ -2,6 +2,7 @@
 const ROLE = {
   "/admin": ["admin:get", "admin:post", "admin:put", "admin:delete"],
   "/users": ["admin:get", "admin:post", "admin:put", "admin:delete"],
+  "/users/:id": ["admin:get", "admin:post", "admin:put", "admin:delete"],
   "/profile": [
     "user:get",
     "user:post",
@@ -81,6 +82,9 @@ const validatePath = (path) => {
   return Object.keys(ROLE).find((url) => {
     if (url === "/products/:id") {
       const match = /^\/products\/\w+$/.test(path);
+      return match ? url : false;
+    } else if (url === "/users/:id") {
+      const match = /^\/users\/\w+$/.test(path);
       return match ? url : false;
     } else {
       return path === url ? url : false;

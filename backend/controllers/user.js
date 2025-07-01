@@ -124,6 +124,61 @@ export async function getUser(req, res) {
 
 /**
  * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     description: Retrieve a user by their unique ID
+ *     tags:
+ *       - User
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Unique ID of the user
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+
+export async function getUserById(req, res) {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    res.send({ success: true, user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+}
+
+/**
+ * @swagger
  * /profile:
  *   put:
  *     summary: Update user credentials

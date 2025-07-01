@@ -5,7 +5,12 @@ import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { loginUser, logoutUser, registerUser } from "./controllers/session.js";
-import { getUser, getUsers, updateCredentials } from "./controllers/user.js";
+import {
+  getUser,
+  getUsers,
+  updateCredentials,
+  getUserById,
+} from "./controllers/user.js";
 import { getAdmin } from "./controllers/admin.js";
 import connectDB from "./config/connectDB.js";
 import {
@@ -76,6 +81,9 @@ app.get("/admin", authMiddleware, roleMiddleWare, getAdmin);
 
 // get users
 app.get("/users", authMiddleware, roleMiddleWare, getUsers);
+
+// get user by id
+app.get("/users/:id", authMiddleware, roleMiddleWare, getUserById);
 
 // get user
 app.get("/profile", authMiddleware, roleMiddleWare, getUser);
