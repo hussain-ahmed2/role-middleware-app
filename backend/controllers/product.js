@@ -59,7 +59,7 @@ import { productSchema } from "../validation/zod-schemas.js";
 export async function getProducts(req, res) {
   try {
     // Find all products
-    const products = await Product.find({});
+    const products = await Product.find({}).sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, products });
   } catch (error) {
