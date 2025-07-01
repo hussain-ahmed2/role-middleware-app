@@ -18,3 +18,6 @@ export const cb64f = async (base64) => {
     type: blob.type,
   });
 };
+
+export const isNewProduct = (createdAt) =>
+  new Date(createdAt) > new Date(new Date() - 24 * 60 * 60 * 1000);
